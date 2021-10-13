@@ -1,18 +1,28 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h3>Project Worked!</h3>
+    <el-button @click="switchComp('Exercise1')" size="small">Exercise1</el-button>
+    <hr>
+    <Exercise1 v-if="showComp==='Exercise1'"></Exercise1>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Exercise1 from '@/views/Exercise1'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Exercise1
+  },
+  data () {
+    return {
+      showComp: ''
+    }
+  },
+  methods: {
+    switchComp (compName) {
+      this.showComp = compName
+    }
   }
 }
 </script>
