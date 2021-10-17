@@ -1,10 +1,14 @@
 <template>
   <div class="exercise3">
     Exercise3
+    测试防抖
+    <button @click="handleSubmit">提交</button>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'Exercise3', // 组件名称
   components: {},
@@ -29,6 +33,12 @@ export default {
     }
   },
   methods: {
+    handleSubmit: _.debounce(() => {
+      console.log('debounce')
+    }, 1000, {
+      leading: true,
+      trailing: false
+    })
   },
   beforeCreate () { // 播放加载动画
   },
