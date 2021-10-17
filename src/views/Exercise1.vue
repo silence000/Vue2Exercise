@@ -1,8 +1,9 @@
 <template>
   <div class="exercise1">
     <div>问题描述: 下面有一个方块, 需求如下: 需要在开关关闭的时候(白天模式)显示黄色方块, 开关开启的时候(夜间模式)显示黑色方块</div>
-    <div class="square yellow"></div>
+    <div class="square" :class="value?'black':'yellow'"></div>
     <el-switch
+      v-model="value"
       inactive-color="#ff4949"
       active-text="夜间模式"
       inactive-text="白天模式"
@@ -28,7 +29,7 @@ export default {
       /*
       * 页面状态
       * */
-
+      value: false
       /*
       * 页面数据
       * */
@@ -56,5 +57,9 @@ export default {
 }
 .yellow {
   background-color: yellow;
+}
+
+.black {
+  background-color: black;
 }
 </style>
