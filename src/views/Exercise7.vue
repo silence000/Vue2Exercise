@@ -1,11 +1,16 @@
 <template>
   <div class="Exercise7">
-    <div v-for="(item, index) in list" :key="item.id">
-      <div>
-        <span v-show="index === 0">{{ item.orginmentLi }}</span>
-        <span :class="index !== 0 ? 'marginLeft': ''">{{ item.repaymentLi }}</span>
-        <span v-show="index === 0">优惠</span>
+    <div class="border">
+      <div :class="isShrink ? 'shrink': 'expand'">
+        <div v-for="(item, index) in list" :key="item.id">
+          <div>
+            <span v-show="index === 0">{{ item.orginmentLi }}</span>
+            <span :class="index !== 0 ? 'marginLeft': ''">{{ item.repaymentLi }}</span>
+            <span v-show="index === 0">优惠</span>
+          </div>
+        </div>
       </div>
+      <div v-show="isShrink" class="arrow" @click="isShrink = false">向下Icon</div>
     </div>
   </div>
 </template>
@@ -27,6 +32,9 @@ export default {
     return {
       /*
       * 页面状态
+      * */
+      /*
+      * 页面数据
       * */
       list: [
         {
@@ -58,11 +66,15 @@ export default {
           dateLi: '2022-01-16',
           orginmentLi: 20000,
           repaymentLi: 20000
+        },
+        {
+          periodsLi: 5,
+          dateLi: '2022-01-16',
+          orginmentLi: 20000,
+          repaymentLi: 20000
         }
-      ]
-      /*
-      * 页面数据
-      * */
+      ],
+      isShrink: true
     }
   },
   methods: {
@@ -89,5 +101,25 @@ export default {
 <style scoped lang="scss">
 .marginLeft {
   margin-left: 47px;
+}
+.border {
+  border: 1px solid black;
+}
+.shrink {
+  height: 88px;
+  max-height: 88px;
+  overflow: hidden;
+}
+.expand {
+  height: 110px;
+  max-height: 110px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.expand::-webkit-scrollbar {
+  display: none;
+}
+.arrow {
+  margin-left: 50px;
 }
 </style>
