@@ -70,6 +70,9 @@ export default {
       this.list.map(item => {
         this.$set(item, 'id', Math.random().toFixed(8).replace('0.', ''))
       })
+      const abc = () => {
+      }
+      abc()
     }
   },
   beforeCreate () { // 播放加载动画
