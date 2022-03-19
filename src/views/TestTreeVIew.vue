@@ -1,6 +1,5 @@
 <template>
   <div class="DocumentTest">
-    <div>This is DocumentTest</div>
     <TestComp
       :list="myList"
       labelName="name"
@@ -34,12 +33,10 @@ export default {
       * */
       myList: [
         {
-          name: '小明',
-          child: []
+          name: '小明'
         },
         {
-          name: '小红',
-          child: []
+          name: '小红'
         }
       ],
       /*
@@ -49,18 +46,17 @@ export default {
     }
   },
   methods: {
-    async fetchChildData (node) {
+    async fetchChildData ({ node, resolve }) {
       const mockData = [
         {
-          name: '小明的儿子1',
-          child: []
+          name: '小明的儿子1'
         },
         {
-          name: '小明的儿子2',
-          child: []
+          name: '小明的儿子2'
         }
       ]
-      node.child = await ajaxGet('/get/', node.id, mockData)
+      const data = await ajaxGet('/get/', node.id, mockData)
+      resolve(data)
     }
   },
   beforeCreate () { // 播放加载动画

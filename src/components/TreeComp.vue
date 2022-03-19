@@ -1,10 +1,16 @@
 <template>
   <div class="TestComp">
-    <div>This is TestComp</div>
     <div v-for="item in myList" :key="item[idName]">
-      <div @click="fetchChildData(item)">{{ item[labelName] }}</div>
-      <div v-for="atom in item[childName]" :key="atom[idName]">
-        <div>{{ atom[labelName] }}</div>
+      <div @click="switchChild(item)">
+        <span v-show="item.isLoading">[加载中...]</span>
+        <span>{{ item[labelName] }}</span>
+      </div>
+
+      <div v-show="item.isShowChild">
+        <div v-for="atom in item[childName]" :key="atom[idName]">
+          <span v-show="atom.isLoading">[加载中...]</span>
+          <span>{{ atom[labelName] }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -13,7 +19,7 @@
 <script>
 import APP_CONSTANT from '@/utils/constant'
 import { cloneDeep } from 'lodash'
-import { addIdInList } from '@/utils/commonUtil'
+import { recursionArr, addIdInList } from '@/utils/commonUtil'
 
 const { labelName, childName, idName } = APP_CONSTANT.LABEL_NAME
 
@@ -60,14 +66,27 @@ export default {
   },
   methods: {
     initComp () {
-      if (this.list[this.idName]) {
-        this.myList = cloneDeep(this.list)
-      } else {
-        this.myList = addIdInList(this.list, this.childName, this.idName)
+      const myList = this.list[this.idName] ? cloneDeep(this.list) : addIdInList(this.list, this.childName, this.idName)
+      const kvMap = {
+        isLoading: () => false,
+        isShowChild: () => false
       }
+      kvMap[this.childName] = () => []
+      this.myList = recursionArr(myList, this.childName, kvMap)
     },
-    fetchChildData (node) {
-      this.$emit('fetchChildData', node)
+    switchChild (node) {
+      node.isShowChild = !node.isShowChild
+      if (node.isShowChild && node[this.childName].length === 0) {
+        node.isLoading = true
+        new Promise(resolve => {
+          this.$emit('fetchChildData', { node, resolve })
+        }).then(data => {
+          const kvMap = {}
+          kvMap[this.childName] = () => []
+          node[this.childName] = recursionArr(data, this.childName, kvMap)
+          node.isLoading = false
+        })
+      }
     }
   },
   beforeCreate () { // 播放加载动画
