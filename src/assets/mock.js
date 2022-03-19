@@ -3,7 +3,7 @@ function getList (param) {
     name: '小明',
     age: 18
   }
-  console.log(data['param'])
+  console.log(data.param)
   return [
     {
       right: '巧克力'
