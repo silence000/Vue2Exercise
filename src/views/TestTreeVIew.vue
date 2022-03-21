@@ -55,7 +55,9 @@ export default {
           name: '小明的儿子2'
         }
       ]
+      // 请求后台, 拿到数据
       const data = await ajaxGet('/get/', node.id, mockData)
+      // 使用 resolve 方法将数据返回给子级
       resolve(data)
     }
   },
