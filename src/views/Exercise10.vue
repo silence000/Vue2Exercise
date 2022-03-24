@@ -1,14 +1,15 @@
 <template>
   <div class="exercise10">
-    <transfer :arrLeft="arrLeft"></transfer>
+    <div>穿梭框练习(思路一)</div>
+    <Transfer12 :transferList="arrLeft"></Transfer12>
   </div>
 </template>
 
 <script>
-import Transfer from '@/components/Transfer10'
+import Transfer12 from '@/components/Transfer12'
 export default {
   name: 'Exercise10', // 组件名称
-  components: { Transfer },
+  components: { Transfer12 },
   props: {}, // 组件参数
   model: { // 用于 props 绑定父级 v-model
   },
@@ -43,6 +44,12 @@ export default {
         },
         {
           label: '备选项4'
+        },
+        {
+          label: '备选项5'
+        },
+        {
+          label: '备选项6'
         }
       ] // 左边备选框
     }

@@ -1,22 +1,23 @@
 <template>
-  <div class="transfer11">
+  <div class="transfer12">
+
     <div class="transfer-left">
       <div class="left-top">
         <div>
           <input
             type="checkbox"
-            :checked="isCheckAllLeft"
-            @click="handleSelectAll('left')"
+            :checked="isSelectedAllLeft"
+            :disabled="isDisabledLeft"
+            @click="handlerSelectedAll('left')"
           />全选
         </div>
         <div class="checkNum">
-          {{ getListNum('leftSelected') }}/{{ getListNum('leftSum') }}
+          {{ getListNum('leftCount') }}/{{ getListNum('leftSum') }}
         </div>
       </div>
       <div class="left-bottom">
         <el-checkbox
-          v-for="(item, index) in transferList"
-          :key="index"
+          v-for="(item, index) in transferList" :key="index"
           v-model="item.isSelected"
           v-show="item.showAt"
         >
@@ -29,14 +30,14 @@
         <el-button
           class="button-left"
           type="primary"
-          @click="handleTransferBtn(false)"
+          @click="handleSelectedBtn(false)"
           :disabled="!isDisableBtn(false)"
         >
           <span>&lt;</span>
         </el-button>
         <el-button
           type="primary"
-          @click="handleTransferBtn(true)"
+          @click="handleSelectedBtn(true)"
           :disabled="!isDisableBtn(true)"
         >
           <span>&gt;</span>
@@ -47,14 +48,14 @@
       <div class="left-top">
         <div>
           <input
-            ref="myInput"
             type="checkbox"
-            :checked="isCheckAllRight"
-            @click="handleSelectAll('right')"
+            :checked="isSelectedAllRight"
+            :disabled="isDisabledRight"
+            @click="handlerSelectedAll('right')"
           />全选
         </div>
         <div class="checkNum">
-          {{ getListNum('rightSelected') }}/{{ getListNum('rightSum') }}
+          {{ getListNum('rightCount') }}/{{ getListNum('rightSum') }}
         </div>
       </div>
       <div class="left-bottom">
@@ -68,12 +69,13 @@
         </el-checkbox>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Transfer11', // 组件名称
+  name: 'Transfer12', // 组件名称
   components: {},
   props: ['transferList'], // 组件参数
   model: { // 用于 props 绑定父级 v-model
@@ -85,13 +87,15 @@ export default {
   watch: { // 监听属性
     transferList: {
       handler (newVal) {
-        const leftAfter = newVal.filter(item => item.showAt)
-        if (leftAfter.length !== 0) {
-          this.isCheckAllLeft = leftAfter.every(item => item.isSelected)
+        const afterLeft = newVal.filter(item => item.showAt)
+        this.isDisabledLeft = afterLeft.length === 0
+        if (afterLeft.length !== 0) {
+          this.isSelectedAllLeft = afterLeft.every(item => item.isSelected)
         }
-        const rightAfter = newVal.filter(item => !item.showAt)
-        if (rightAfter.length !== 0) {
-          this.isCheckAllRight = rightAfter.every(item => item.isSelected)
+        const afterRight = newVal.filter(item => !item.showAt)
+        this.isDisabledRight = afterRight.length === 0
+        if (afterRight.length !== 0) {
+          this.isSelectedAllRight = afterRight.every(item => item.isSelected)
         }
       },
       deep: true
@@ -102,8 +106,10 @@ export default {
       /*
       * 页面状态
       * */
-      isCheckAllLeft: false, // 左边全选
-      isCheckAllRight: false // 右边全选
+      isSelectedAllLeft: false,
+      isSelectedAllRight: false,
+      isDisabledLeft: false,
+      isDisabledRight: false
       /*
       * 页面数据
       * */
@@ -116,7 +122,8 @@ export default {
         this.$set(item, 'showAt', true)
       })
     },
-    handleTransferBtn (type) {
+    // 选中之后点击按钮移动
+    handleSelectedBtn (type) {
       this.transferList.filter(item => (item.showAt === type && item.isSelected)).forEach(item => {
         item.showAt = !item.showAt
         item.isSelected = false
@@ -127,52 +134,7 @@ export default {
         this.isSelectedAllRight = false
       }
     },
-    getListNum (type) {
-      let countLeft = 0
-      let countRight = 0
-      let selectedLeft = 0
-      let selectedRight = 0
-      this.transferList.forEach(item => {
-        if (item.showAt) {
-          countLeft++
-          if (item.isSelected) selectedLeft++
-        } else {
-          countRight++
-          if (item.isSelected) selectedRight++
-        }
-      })
-      let result
-      switch (type) {
-        case 'leftSum':
-          result = countLeft
-          break
-        case 'leftSelected':
-          result = selectedLeft
-          break
-        case 'rightSum':
-          result = countRight
-          break
-        case 'rightSelected':
-          result = selectedRight
-          break
-        default:
-          result = 0
-      }
-      return result
-    },
-    handleSelectAll (type) {
-      this.transferList.forEach(item => {
-        if (type === 'left') {
-          if (item.showAt) {
-            item.isSelected = !this.isCheckAllLeft
-          }
-        } else if (type === 'right') {
-          if (!item.showAt) {
-            item.isSelected = !this.isCheckAllRight
-          }
-        }
-      })
-    },
+    // 非选禁用
     isDisableBtn (type) {
       if (type) {
         return this.transferList.some(item => {
@@ -183,6 +145,54 @@ export default {
           return (!item.showAt && item.isSelected)
         })
       }
+    },
+    // 右上角计数
+    getListNum (type) {
+      let leftCount = 0
+      let leftSum = 0
+      let rightCount = 0
+      let rightSum = 0
+      this.transferList.forEach(item => {
+        if (item.showAt) {
+          leftSum++
+          if (item.isSelected) leftCount++
+        } else {
+          rightSum++
+          if (item.isSelected) rightCount++
+        }
+      })
+      let result
+      switch (type) {
+        case 'leftCount':
+          result = leftCount
+          break
+        case 'leftSum':
+          result = leftSum
+          break
+        case 'rightCount':
+          result = rightCount
+          break
+        case 'rightSum':
+          result = rightSum
+          break
+        default:
+          result = 0
+      }
+      return result
+    },
+    // 全选
+    handlerSelectedAll (type) {
+      this.transferList.forEach(item => {
+        if (type === 'left') {
+          if (item.showAt) {
+            item.isSelected = !this.isSelectedAllLeft
+          }
+        } else if (type === 'right') {
+          if (!item.showAt) {
+            item.isSelected = !this.isSelectedAllRight
+          }
+        }
+      })
     }
   },
   beforeCreate () { // 播放加载动画
@@ -200,7 +210,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.transfer11 {
+.transfer12 {
   width: 400px;
   display: flex;
 }

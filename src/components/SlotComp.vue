@@ -1,5 +1,5 @@
 <template>
-  <div class="SlotComp">
+  <div class="slotComp">
     <slot :user="user">{{ user.lastName }}</slot>
   </div>
 </template>

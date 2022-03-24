@@ -1,26 +1,37 @@
 <template>
-  <div class="slideShow">
+  <div class="slideShow1">
     <div class="container">
-      <div class="leftButton" @click="cutImg(-1)">左</div>
+      <div
+        class="leftButton"
+        @click="cutImg(-1)"
+      >左
+      </div>
       <div class="image">
         <div class="bigImg">
-          <img v-show="currentUrl.url" :src="currentUrl.url"/>
+          <img :src="currentImg.url" v-show="currentImg.url" alt=""/>
         </div>
         <div class="smallImg">
-          <div :class="cutBorderColor(item)"
-               @click="getBigImg(item, index)"
-               v-for="(item, index) in imgUrl" :key="item.id">
-            <img :src="item.url"/></div>
+          <div
+            :class="cutBorderColor(item)"
+            @click="getBigImg(item, index)"
+            v-for="(item, index) in imgUrl" :key="item.id"
+          >
+            <img :src="item.url" alt=""/>
+          </div>
         </div>
       </div>
-      <div class="rightButton" @click="cutImg(1)">右</div>
+      <div
+        class="rightButton"
+        @click="cutImg(1)"
+      >右
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SlideShow', // 组件名称
+  name: 'SlideShow1', // 组件名称
   components: {},
   props: ['imgUrl'], // 组件参数
   model: { // 用于 props 绑定父级 v-model
@@ -36,46 +47,45 @@ export default {
       /*
       * 页面状态
       * */
-
-      /*
-      * 页面数据
-      * */
-      currentUrl: {
+      currentImg: { // 当前激活的图片
         index: '',
         url: ''
       }
+      /*
+      * 页面数据
+      * */
     }
   },
   methods: {
     init () {
-      this.currentUrl.index = 0
-      this.currentUrl.url = this.imgUrl[0].url
+      this.currentImg.index = 0
+      this.currentImg.url = this.imgUrl[0].url
       // 把图片的每一个状态循环进图片数组
       this.imgUrl.forEach(item => {
-        this.$set(item, 'isActivate', false)
+        this.$set(item, 'isActivated', false)
       })
       // 将图片数组中的第一个状态 默认改成true
-      this.imgUrl[0].isActivate = true
+      this.imgUrl[0].isActivated = true
     },
     getBigImg (item, index) {
-      this.currentUrl.url = item.url
-      this.imgUrl[this.currentUrl.index].isActivate = false
-      this.currentUrl.index = index
-      this.imgUrl[this.currentUrl.index].isActivate = true
+      this.currentImg.url = item.url
+      this.imgUrl[this.currentImg.index].isActivated = false
+      this.currentImg.index = index
+      this.imgUrl[this.currentImg.index].isActivated = true
     },
     cutImg (val) {
-      this.imgUrl[this.currentUrl.index].isActivate = false
-      this.currentUrl.index += val
-      if (this.currentUrl.index > this.imgUrl.length - 1) {
-        this.currentUrl.index = 0
-      } else if (this.currentUrl.index < 0) {
-        this.currentUrl.index = this.imgUrl.length - 1
+      this.imgUrl[this.currentImg.index].isActivated = false
+      this.currentImg.index += val
+      if (this.currentImg.index > this.imgUrl.length - 1) {
+        this.currentImg.index = 0
+      } else if (this.currentImg.index < 0) {
+        this.currentImg.index = this.imgUrl.length - 1
       }
-      this.currentUrl.url = this.imgUrl[this.currentUrl.index].url
-      this.imgUrl[this.currentUrl.index].isActivate = true
+      this.currentImg.url = this.imgUrl[this.currentImg.index].url
+      this.imgUrl[this.currentImg.index].isActivated = true
     },
     cutBorderColor (item) {
-      if (item.isActivate) {
+      if (item.isActivated) {
         return 'smallImg-box-red smallImg-box'
       }
       return 'smallImg-box-white smallImg-box'
@@ -96,7 +106,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.exercise9 {
+.slideShow1 {
   width: 1000px;
 }
 
@@ -142,6 +152,7 @@ export default {
     width: 100px;
     height: 70px;
   }
+
   .smallImg-box ~ .smallImg-box {
     margin-left: 10px;
   }
@@ -149,9 +160,11 @@ export default {
   .smallImg-box-white {
     border: 1px solid rgba(0, 0, 0, 0);
   }
+
   .smallImg-box-red {
     border: 1px solid rgb(255, 0, 0);
   }
+
   img {
     width: 100px;
     height: 70px;

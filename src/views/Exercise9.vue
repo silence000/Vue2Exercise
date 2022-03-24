@@ -1,14 +1,20 @@
 <template>
   <div class="exercise9">
-    <SlideShow :imgUrl="imgUrl"></SlideShow>
+    <div>轮播练习</div>
+<!--    <SlideShow :imgUrl="imgUrl"></SlideShow>-->
+    <SlideShow1 :imgUrl="imgUrl"></SlideShow1>
   </div>
 </template>
 
 <script>
-import SlideShow from '@/components/SlideShow'
+// import SlideShow from '@/components/SlideShow'
+import SlideShow1 from '@/components/SlideShow1'
 export default {
   name: 'Exercise9', // 组件名称
-  components: { SlideShow },
+  components: {
+    // SlideShow
+    SlideShow1
+  },
   props: {}, // 组件参数
   model: { // 用于 props 绑定父级 v-model
   },

@@ -1,5 +1,6 @@
 <template>
   <div class="Exercise11">
+    <div>穿梭框练习(思路二)</div>
     <transfer11 :transferList="transferList"></transfer11>
   </div>
 </template>
